@@ -9,20 +9,20 @@
 
 escaped_args=()
 for arg in "$@"; do
-    quoted="\"${arg//\"/\\\"}\""
-    quoted=${quoted//\\/\\\\}
-    quoted=${quoted//\"/\\\"}
-    escaped_args+=($quoted)
+  quoted="\"${arg//\"/\\\"}\""
+  quoted=${quoted//\\/\\\\}
+  quoted=${quoted//\"/\\\"}
+  escaped_args+=($quoted)
 done
 
-cwd=$(dirname "$BASH_SOURCE")
+cwd=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cwd="\"${cwd//\"/\\\"}\""
 cwd=${cwd//\\/\\\\}
 cwd=${cwd//\"/\\\"}
 
 osascript > /dev/null <<EOF
 tell application "Terminal"
-    activate
-    do script "cd ${cwd}; clear; ./pause-console.rb ${escaped_args[@]}; exit"
+  activate
+  do script "cd ${cwd}; clear; ./pause-console.rb ${escaped_args[@]}; exit"
 end tell
 EOF

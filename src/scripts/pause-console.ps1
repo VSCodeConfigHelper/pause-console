@@ -5,14 +5,18 @@ if ($args.Length -eq 0) {
     exit
 }
 $Host.UI.RawUI.WindowTitle = $args[0]
+
 $startTime = $(Get-Date)
 $proc = Start-Process -FilePath $args[0] -ArgumentList $args[1..($args.Count-1)] -NoNewWindow -PassThru
 $handle = $proc.Handle # https://stackoverflow.com/a/23797762/1479211
 $proc.WaitForExit()
 [TimeSpan]$elapsedTime = $(Get-Date) - $startTime
 
-Write-Host
-Write-Host "----------------" -NoNewline
+$exitCodeStr = " 返回值 {0} " -f $exitCode
+$timeStr = " 用时 {0:n4}s " -f $elapsedTime.TotalSeconds
+$termWidth = $Host.UI.RawUI.WindowSize.Width
+$hintWidth = $exitCodeStr.Length + $timeStr.Length + 7 # 5 CJK character and 2 Powerline Glyphs
+$dots = [String]::new([char]0xb7, [Math]::Floor(($termWidth - $hintWidth) / 2))
 $exitCode = $proc.ExitCode
 if ($exitCode -eq 0) {
     $exitColor = 'Green'
@@ -22,10 +26,13 @@ if ($exitCode -eq 0) {
 # PowerLine Glyphs < and >
 $gt = [char]0xe0b0
 $lt = [char]0xe0b2
+
+Write-Host
+Write-Host "$dots" -ForegroundColor 'DarkGray' -NoNewline
 Write-Host "$lt" -ForegroundColor $exitColor -NoNewline
 Write-Host (" 返回值 {0} " -f $exitCode) -BackgroundColor $exitColor -NoNewline
-Write-Host (" 用时 {1:n4}s " -f $exitCode, $elapsedTime.TotalSeconds) -BackgroundColor 'Yellow' -ForegroundColor 'Black' -NoNewline
+Write-Host (" 用时 {0:n4}s " -f $elapsedTime.TotalSeconds) -BackgroundColor 'Yellow' -ForegroundColor 'Black' -NoNewline
 Write-Host "$gt" -ForegroundColor 'Yellow' -NoNewline
-Write-Host "----------------"
-Write-Host "进程已退出。按任意键关闭窗口..." -NoNewline
+Write-Host "$dots" -ForegroundColor 'DarkGray'
+Write-Host "进程已结束。按任意键关闭窗口..."  -ForegroundColor 'DarkGray' -NoNewline
 [void][System.Console]::ReadKey($true)
