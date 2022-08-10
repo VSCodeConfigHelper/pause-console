@@ -2,6 +2,9 @@
   "name": "pause-console",
   "displayName": "Console Pauser",
   "description": "",
+  "repository": {
+    "url": "https://github.com/VSCodeConfigHelper/pause-console.git"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.69.0"
@@ -10,7 +13,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:pause-console.helloWorld"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -19,15 +22,115 @@
         "command": "pause-console.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "taskDefinitions": [
+      {
+        "type": "pause-console",
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "The command to be executed."
+          },
+          "args": {
+            "type": "array",
+            "description": "Arguments passed to the command.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "options": {
+            "type": "object",
+            "description": "Additional options",
+            "properties": {
+              "cwd": {
+                "type": "string",
+                "description": "The current working directory of the executed program"
+              },
+              "env": {
+                "type": "object",
+                "description": "The environment variable of the executed program",
+                "patternProperties": {
+                  ".*": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "configuration": {
+      "title": "Console Pauser",
+      "properties": {
+        "pause-console.terminalEmulator.windows": {
+          "description": "Specify which terminal emulator to use (Windows)",
+          "type": "string",
+          "enum": [
+            "auto",
+            "cmd"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Automatically determined by the extension",
+            "Use Windows console (like conhost.exe or wt.exe)"
+          ]
+        },
+        "pause-console.terminalEmulator.macos": {
+          "description": "Specify which terminal emulator to use (macOS)",
+          "type": "string",
+          "enum": [
+            "auto",
+            "terminal"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Automatically determined by the extension",
+            "Use Terminal.app that comes with OS"
+          ]
+        },
+        "pause-console.terminalEmulator.linux": {
+          "description": "Specify which terminal emulator to use (Linux)",
+          "type": "string",
+          "enum": [
+            "auto",
+            "x",
+            "terminator",
+            "konsole",
+            "gnome",
+            "guake",
+            "urxvt",
+            "xfce4",
+            "kitty",
+            "alarcitty",
+            "xterm"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Automatically determined by the extension",
+            "Use the registered terminal emulator in X",
+            "Terminator",
+            "Konsole, the default terminal emulator in KDE",
+            "Gnome Emulator, the default terminal emulator in Gnome",
+            "Guake",
+            "urxvt",
+            "xfce4",
+            "Kitty",
+            "Alarcitty",
+            "XTerm"
+          ]
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "pnpm run compile && pnpm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "lint": "eslint src --ext ts"
   },
   "devDependencies": {
     "@types/vscode": "^1.69.0",

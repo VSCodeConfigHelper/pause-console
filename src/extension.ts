@@ -1,26 +1,89 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import * as path from "node:path";
+import * as os from "node:os";
+import { LINUX, MACOS, TerminalEmulator, WINDOWS } from "./terminal_emulators";
+import { execSync } from "node:child_process";
+import { createExecution } from "./escaping";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "pause-console" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('pause-console.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Console Pauser!');
-	});
-
-	context.subscriptions.push(disposable);
+interface PauseConsoleTaskDefinition extends vscode.TaskDefinition {
+  command: string;
+  args?: string[];
+  options?: {
+    cwd?: string;
+    env?: Record<string, string>;
+  };
 }
 
-// this method is called when your extension is deactivated
+function testEmulator(e: TerminalEmulator) {
+  if (typeof e.test === "undefined") return true;
+  try {
+    execSync(e.test);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function getPauser(): string {
+  let platform: string;
+  let emulators: TerminalEmulator[];
+  switch (os.platform()) {
+    case "win32":
+      platform = "windows";
+      emulators = WINDOWS;
+      break;
+    case "darwin":
+      platform = "macos";
+      emulators = MACOS;
+      break;
+    case "linux":
+      platform = "linux";
+      emulators = LINUX;
+      break;
+    default:
+      throw new Error("Unsupported platform: " + os.platform());
+  }
+  const config = vscode.workspace
+    .getConfiguration("pause-console")
+    .get<string>(`terminalEmulator.${platform}`)!;
+
+  let emu: TerminalEmulator | undefined;
+  if (config === "auto") {
+    for (const e of emulators) {
+      if (testEmulator(e)) {
+        emu = e;
+        break;
+      }
+    }
+    if (typeof emu === "undefined") {
+      throw new Error(`No available terminal emulator found.`);
+    }
+  } else {
+    emu = emulators.find((e) => e.name === config);
+    if (typeof emu === "undefined") {
+      throw new Error(`Unknown terminal emulator: ${config}`);
+    }
+  }
+
+  return path.join(__dirname, "../scripts/", emu.script);
+}
+
+export function activate(context: vscode.ExtensionContext) {
+  const taskProvider = vscode.tasks.registerTaskProvider("pause-console", {
+    provideTasks: () => [],
+    resolveTask: (task) => {
+      const def = task.definition as PauseConsoleTaskDefinition;
+      const args = [def.command, ...(def.args ?? [])];
+      return new vscode.Task(
+        def,
+        vscode.TaskScope.Workspace,
+        task.name,
+        task.source,
+        createExecution(getPauser(), args, def.options)
+      );
+    },
+  });
+  context.subscriptions.push(taskProvider);
+}
+
 export function deactivate() {}

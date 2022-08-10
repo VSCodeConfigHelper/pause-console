@@ -8,9 +8,8 @@ if ARGV.length == 0 then
   exit
 end
 
-command_line = ARGV.map { |arg| %|"#{arg.gsub('"', '\"')}"| } .join(' ')
 start_time = Time.now
-system("#{command_line}")
+system(*ARGV)
 exit_code = $?.exitstatus
 end_time = Time.now
 

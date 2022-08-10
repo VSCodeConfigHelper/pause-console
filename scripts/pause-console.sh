@@ -1,6 +1,5 @@
 #!/bin/bash
 
-clear
 if [[ $# -lt 1 ]]; then
   echo "Usage: $0 <Executable> [<Arguments...>]"
   exit

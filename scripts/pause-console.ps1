@@ -1,13 +1,17 @@
 ﻿$Host.UI.RawUI.BackgroundColor = 'Black'
 Clear-Host
 if ($args.Length -eq 0) {
-    Write-Host "Usage: $PSCommandPath <Executable> [<Arguments...>]"
-    exit
+  Write-Host "Usage: $PSCommandPath <Executable> [<Arguments...>]"
+  exit
 }
 $Host.UI.RawUI.WindowTitle = $args[0]
 
+$ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+. ("$ScriptDirectory\convertto-commandline.ps1")
+$quotedArgs = ConvertTo-CommandLine $args[1..($args.Count - 1)]
+
 $startTime = $(Get-Date)
-$proc = Start-Process -FilePath $args[0] -ArgumentList $args[1..($args.Count-1)] -NoNewWindow -PassThru
+$proc = Start-Process -FilePath $args[0] -ArgumentList $quotedArgs -NoNewWindow -PassThru
 $handle = $proc.Handle # https://stackoverflow.com/a/23797762/1479211
 $proc.WaitForExit()
 [TimeSpan]$elapsedTime = $(Get-Date) - $startTime

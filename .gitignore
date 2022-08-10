@@ -1,4 +1,4 @@
 node_modules/
+out/
 
-.npm-debug.log
-.pnpm-debug.log
+*.vsix

@@ -1,4 +1,4 @@
-#!/user/bin/osascript
+#!/usr/bin/osascript
 
 -- 尚未测试，Apple 有够烦
 
@@ -16,7 +16,7 @@ on run argv
     activate
     
     -- 忙等，不好
-    -- set newTab do script (path to me) & "/pause-console.rb " & scriptArgv & "; exit"
+    -- set newTab to do script (path to me) & "/pause-console.rb " & scriptArgv & "; exit"
     -- delay 1
     -- repeat while newTab exists
     --   delay 1
