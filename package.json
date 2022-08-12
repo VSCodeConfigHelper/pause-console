@@ -1,11 +1,13 @@
 {
   "name": "pause-console",
   "displayName": "Console Pauser",
-  "description": "",
+  "description": "Launch your task from an external console",
+  "publisher": "Guyutongxue",
+  "icon": "icon.png",
   "repository": {
     "url": "https://github.com/VSCodeConfigHelper/pause-console.git"
   },
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.69.0"
   },
@@ -98,6 +100,7 @@
           "enum": [
             "auto",
             "x",
+            "cmd",
             "terminator",
             "konsole",
             "gnome",
@@ -112,6 +115,7 @@
           "enumDescriptions": [
             "Automatically determined by the extension",
             "Use the registered terminal emulator in X",
+            "Use the windows console (Only available in WSL)",
             "Terminator",
             "Konsole, the default terminal emulator in KDE",
             "Gnome Emulator, the default terminal emulator in Gnome",
@@ -133,16 +137,19 @@
     "lint": "eslint src --ext ts"
   },
   "devDependencies": {
-    "@types/vscode": "^1.69.0",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "16.x",
+    "@types/vscode": "^1.69.0",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
+    "@vscode/test-electron": "^2.1.5",
     "eslint": "^8.20.0",
     "glob": "^8.0.3",
     "mocha": "^10.0.0",
-    "typescript": "^4.7.4",
-    "@vscode/test-electron": "^2.1.5"
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@gytx/pause-console-wsl": "^0.1.2"
   }
 }

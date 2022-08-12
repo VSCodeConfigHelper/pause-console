@@ -1,3 +1,5 @@
+import * as path from "node:path";
+
 export type TerminalEmulator = {
   name: string;
   script: string;
@@ -9,6 +11,11 @@ export const LINUX: TerminalEmulator[] = [
     name: "x",
     script: "x-terminal-emulator.sh",
     test: "command -v x-terminal-emulator"
+  },
+  {
+    name: "cmd",
+    script: path.join(__dirname, "../node_modules/@gytx/pause-console-wsl/bin/entry.sh"),
+    test: "command -v cmd.exe"
   },
   {
     name: "terminator",

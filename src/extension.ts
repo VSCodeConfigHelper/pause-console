@@ -65,7 +65,7 @@ function getPauser(): string {
     }
   }
 
-  return path.join(__dirname, "../scripts/", emu.script);
+  return path.resolve(__dirname, "../scripts/", emu.script);
 }
 
 export function activate(context: vscode.ExtensionContext) {

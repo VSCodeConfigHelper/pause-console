@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 
 function argvToShell(argv: string[]) {
   return argv
-    .map((arg) => `"${arg.replace(/(\$|`|"|\\)/g, "\\$1")}"`)
+    .map((arg) => `"${arg.replace(/([$`"\\])/g, "\\$1")}"`)
     .join(" ");
 }
 
