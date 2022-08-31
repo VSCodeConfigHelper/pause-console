@@ -1,9 +1,13 @@
 # Change Log
 
-All notable changes to the "pause-console" extension will be documented in this file.
+## 0.2.1
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- Change activation events
 
-## [Unreleased]
+## 0.2.0
+
+- Add better Mac support: Terminal.app and iTerm2.app
+
+## 0.1.0
 
 - Initial release

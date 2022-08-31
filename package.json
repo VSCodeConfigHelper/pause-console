@@ -7,7 +7,7 @@
   "repository": {
     "url": "https://github.com/VSCodeConfigHelper/pause-console.git"
   },
-  "version": "0.2.0",
+  "version": "0.2.1",
   "engines": {
     "vscode": "^1.69.0"
   },
@@ -15,16 +15,11 @@
     "Other"
   ],
   "activationEvents": [
+    "onCommand:workbench.action.tasks.runTask",
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "pause-console.helloWorld",
-        "title": "Hello World"
-      }
-    ],
     "taskDefinitions": [
       {
         "type": "pause-console",
