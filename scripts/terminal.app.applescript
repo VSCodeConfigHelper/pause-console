@@ -1,32 +1,33 @@
 #!/usr/bin/osascript
 
--- 尚未测试，Apple 有够烦
-
-on list2string(list, delim)
-  set backup to AppleScript's text item delimiters
-  set AppleScript's text item delimiters to delim
-  set result to list as string
-  set AppleScript's text item delimiters to backup
-  return result
-end list2string
+on make_cmdline(argv)
+	set quoted_argv to {}
+	repeat with arg in argv
+		set end of quoted_argv to quoted form of arg
+	end repeat
+	
+	set text item delimiters to " "
+	set args to quoted_argv as string
+	
+	set filepath to POSIX path of ((path to me as text) & "::")
+	
+	return filepath & "pause-console.rb " & args & "; exit"
+end make_cmdline
 
 on run argv
-  set scriptArgv to list2string(quoted form of every argv, " ")
-  tell application "Terminal"
-    activate
+	set cmdline to make_cmdline(argv)
+	tell application "Terminal"
+		activate
+		
+		set new_tab to do script cmdline
+		set targeted_window to first window of (every window whose tabs contains new_tab)
+		delay 1
     
-    -- 忙等，不好
-    -- set newTab to do script (path to me) & "/pause-console.rb " & scriptArgv & "; exit"
-    -- delay 1
-    -- repeat while newTab exists
-    --   delay 1
-    -- end repeat
-    -- close
-
-    -- 是否有类似这样的操作？不清楚
-    -- tell window 1
-    --   do script (path to me) & "/pause-console.rb" & scriptArgv & "; exit"
-    --   set shell exit action to 0
-    -- end tell
-  end tell
+		if (system attribute "PAUSE_CONSOLE_WAIT_AND_CLOSE") is not "" then
+			repeat while busy of new_tab
+				delay 1
+			end repeat
+			close targeted_window
+		end if
+	end tell
 end run

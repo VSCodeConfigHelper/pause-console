@@ -3,7 +3,7 @@ import * as path from "node:path";
 import * as os from "node:os";
 import { LINUX, MACOS, TerminalEmulator, WINDOWS } from "./terminal_emulators";
 import { execSync } from "node:child_process";
-import { createExecution } from "./escaping";
+import { createExecution } from "./execution";
 
 interface PauseConsoleTaskDefinition extends vscode.TaskDefinition {
   command: string;
@@ -24,7 +24,7 @@ function testEmulator(e: TerminalEmulator) {
   }
 }
 
-function getPauser(): string {
+function getPauser(): TerminalEmulator {
   let platform: string;
   let emulators: TerminalEmulator[];
   switch (os.platform()) {
@@ -65,7 +65,7 @@ function getPauser(): string {
     }
   }
 
-  return path.resolve(__dirname, "../scripts/", emu.script);
+  return emu;
 }
 
 export function activate(context: vscode.ExtensionContext) {

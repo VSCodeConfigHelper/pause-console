@@ -13,7 +13,7 @@ export const LINUX: TerminalEmulator[] = [
     test: "command -v x-terminal-emulator"
   },
   {
-    name: "cmd",
+    name: "cmd-wsl",
     script: path.join(__dirname, "../node_modules/@gytx/pause-console-wsl/bin/entry.sh"),
     test: "command -v cmd.exe"
   },
@@ -73,7 +73,12 @@ export const WINDOWS: TerminalEmulator[] = [
 
 export const MACOS: TerminalEmulator[] = [
   {
+    name: "iterm2",
+    script: "iterm.py",
+    test: "pgrep iTerm2 && [ -d ~/Library/Application\\ Support/iTerm2/iterm2env/versions ]"
+  },
+  {
     name: "terminal",
-    script: "terminal.app.sh",
+    script: "terminal.app.applescript",
   },
 ];
