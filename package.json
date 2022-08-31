@@ -7,7 +7,7 @@
   "repository": {
     "url": "https://github.com/VSCodeConfigHelper/pause-console.git"
   },
-  "version": "0.2.1",
+  "version": "0.2.2",
   "engines": {
     "vscode": "^1.69.0"
   },
@@ -15,7 +15,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:workbench.action.tasks.runTask",
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
@@ -140,12 +139,12 @@
     "@typescript-eslint/parser": "^5.31.0",
     "@vscode/test-electron": "^2.1.5",
     "eslint": "^8.20.0",
-    "glob": "^8.0.3",
     "mocha": "^10.0.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
     "@gytx/pause-console-wsl": "^0.1.2",
-    "bplist-parser": "^0.3.2"
+    "bplist-parser": "^0.3.2",
+    "glob": "^8.0.3"
   }
 }

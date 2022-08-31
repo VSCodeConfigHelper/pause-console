@@ -1,8 +1,8 @@
 # Change Log
 
-## 0.2.1
+## 0.2.2 ~ 0.2.1
 
-- Change activation events
+- Fix fatal error
 
 ## 0.2.0
 
