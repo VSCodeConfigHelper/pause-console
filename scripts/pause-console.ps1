@@ -20,7 +20,7 @@ $exitCodeStr = " 返回值 {0} " -f $exitCode
 $timeStr = " 用时 {0:n4}s " -f $elapsedTime.TotalSeconds
 $termWidth = $Host.UI.RawUI.WindowSize.Width
 $hintWidth = $exitCodeStr.Length + $timeStr.Length + 7 # 5 CJK character and 2 Powerline Glyphs
-$dots = [String]::new([char]0xb7, [Math]::Floor(($termWidth - $hintWidth) / 2))
+$dots = [String]::new([char]0x2d, [Math]::Floor(($termWidth - $hintWidth) / 2))
 $exitCode = $proc.ExitCode
 if ($exitCode -eq 0) {
     $exitColor = 'Green'
