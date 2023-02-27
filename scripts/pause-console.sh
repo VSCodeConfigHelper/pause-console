@@ -4,6 +4,7 @@ if [[ $# -lt 1 ]]; then
   echo "Usage: $0 <Executable> [<Arguments...>]"
   exit
 fi
+
 function set_title() {
   if [[ -z "$ORIG" ]]; then
     ORIG=$PS1
@@ -11,6 +12,11 @@ function set_title() {
   TITLE="\[\e]2;$*\a\]"
   PS1=${ORIG}${TITLE}
 }
+
+function repeat(){
+	for i in $(seq 1 $len); do echo -n "$1"; done
+}
+
 set_title $1
 start_time="$(date -u +%s.%4N)"
 "$1" "${@:2}"
@@ -21,7 +27,7 @@ exit_code_str=" 退出码 ${exit_code} "
 time_str=" 用时 $(echo "$end_time-$start_time" | bc | sed 's/^\./0./')s "
 hint_width=$((${#time_str} + ${#exit_code_str} + 7)) # 5 CJK character and 2 Powerline Glyphs
 len=$((($(tput cols) - $hint_width) / 2))
-dots=$(printf '-%.0s' $(seq 1 $len))
+dots=$(repeat '-' $len)
 GRAY='\033[38;5;242m'
 RESET='\033[0m'
 BG_RED='\033[41m'
