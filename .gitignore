@@ -1,5 +1,8 @@
 node_modules/
 out/
+dist/
 
 *.vsix
 __pycache__
+
+.DS_Store

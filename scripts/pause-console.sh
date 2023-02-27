@@ -17,7 +17,7 @@ start_time="$(date -u +%s.%4N)"
 exit_code=$?
 end_time="$(date -u +%s.%4N)"
 
-exit_code_str=" 返回值 ${exit_code} "
+exit_code_str=" 退出码 ${exit_code} "
 time_str=" 用时 $(echo "$end_time-$start_time" | bc | sed 's/^\./0./')s "
 hint_width=$((${#time_str} + ${#exit_code_str} + 7)) # 5 CJK character and 2 Powerline Glyphs
 len=$((($(tput cols) - $hint_width) / 2))

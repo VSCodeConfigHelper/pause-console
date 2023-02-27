@@ -10,13 +10,19 @@ $ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 . ("$ScriptDirectory\convertto-commandline.ps1")
 $quotedArgs = ConvertTo-CommandLine $args[1..($args.Count - 1)]
 
-$startTime = $(Get-Date)
-$proc = Start-Process -FilePath $args[0] -ArgumentList $quotedArgs -NoNewWindow -PassThru
+if ($args.Count -ne 1) {
+  $quotedArgs = ConvertTo-CommandLine $args[1..($args.Count - 1)]
+  $startTime = $(Get-Date)
+  $proc = Start-Process -FilePath $args[0] -ArgumentList $quotedArgs -NoNewWindow -PassThru
+} else {
+  $startTime = $(Get-Date)
+  $proc = Start-Process -FilePath $args[0] -NoNewWindow -PassThru
+}
 $handle = $proc.Handle # https://stackoverflow.com/a/23797762/1479211
 $proc.WaitForExit()
 [TimeSpan]$elapsedTime = $(Get-Date) - $startTime
 
-$exitCodeStr = " 返回值 {0} " -f $exitCode
+$exitCodeStr = " 退出码 {0} " -f $exitCode
 $timeStr = " 用时 {0:n4}s " -f $elapsedTime.TotalSeconds
 $termWidth = $Host.UI.RawUI.WindowSize.Width
 $hintWidth = $exitCodeStr.Length + $timeStr.Length + 7 # 5 CJK character and 2 Powerline Glyphs
@@ -34,7 +40,7 @@ $lt = [char]0xe0b2
 Write-Host
 Write-Host "$dots" -ForegroundColor 'DarkGray' -NoNewline
 Write-Host "$lt" -ForegroundColor $exitColor -NoNewline
-Write-Host (" 返回值 {0} " -f $exitCode) -BackgroundColor $exitColor -NoNewline
+Write-Host (" 退出码 {0} " -f $exitCode) -BackgroundColor $exitColor -NoNewline
 Write-Host (" 用时 {0:n4}s " -f $elapsedTime.TotalSeconds) -BackgroundColor 'Yellow' -ForegroundColor 'Black' -NoNewline
 Write-Host "$gt" -ForegroundColor 'Yellow' -NoNewline
 Write-Host "$dots" -ForegroundColor 'DarkGray'

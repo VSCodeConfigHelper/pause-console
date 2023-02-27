@@ -8,12 +8,17 @@ if ARGV.length == 0 then
   exit
 end
 
-start_time = Time.now
-system(*ARGV)
+if ARGV.length != 1 then
+  start_time = Time.now
+  system(*ARGV)
+else
+  start_time = Time.now
+  system([ARGV[0], ARGV[0]])
+end
 exit_code = $?.exitstatus
 end_time = Time.now
 
-exit_code_str = " 返回值 #{exit_code} "
+exit_code_str = " 退出码 #{exit_code} "
 elapsed_time = "%.4f" % (end_time - start_time)
 time_str = " 用时 #{elapsed_time}s "
 hint_width = time_str.length + time_str.length + 2 # 5 CJK character and 2 Powerline Glyphs
