@@ -25,9 +25,9 @@ async def main(connection):
   args = ' '.join(map(shlex.quote, sys.argv[1:])) # shlex.join not available in py3.7-
   # args = join_args(sys.argv[1:])
   cmd = f"{script_dir}/pause-console.rb {args}"
-  with open("/Users/guyutongxue/a.txt", "w") as f:
-    f.write(format(sys.argv))
-    f.write(cmd)
+  # with open("/Users/guyutongxue/a.txt", "w") as f:
+  #   f.write(format(sys.argv))
+  #   f.write(cmd)
   app = await iterm2.async_get_app(connection)
   await app.async_activate()
   await iterm2.Window.async_create(connection, command=cmd)
